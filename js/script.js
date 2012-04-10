@@ -146,18 +146,18 @@ $(document).ready(function () {
      * @param g
      * @param b
      */
-    var Colour = function (r,g,b){
+    var Colour = function (r, g, b){
         var r = r;
         var g = g;
         var b = b;
 
-        var collective = [r,g,b];
+        var collective = [r, g, b];
 
         return {
-            values: collective,
-            r: r,
-            g: g,
-            b: b
+            values:collective,
+            r:r,
+            g:g,
+            b:b
         };
     };
 
@@ -169,36 +169,36 @@ $(document).ready(function () {
 
 
     function randomColourObjects(){
-        var col1 = bitwiseRound(Math.random()*255);
-        var col2 = bitwiseRound(Math.random()*255);
-        var col3 = bitwiseRound(Math.random()*255);
+        var col1 = bitwiseRound(Math.random() * 255);
+        var col2 = bitwiseRound(Math.random() * 255);
+        var col3 = bitwiseRound(Math.random() * 255);
         samples.push(new Colour(col1, col2, col3));
     }
 
 
     /**
-    * Push Random Colours
-    * @param value Number of random colours
-    **/
+     * Push Random Colours
+     * @param value Number of random colours
+     **/
     function generateRandColours(value){
-        for(var i=0;i<value;i++){
+        for (var i = 0; i < value; i++){
             randomColourObjects();
         }
     }
 
     /**
-    * Generate samples of the colours
-    **/
+     * Generate samples of the colours
+     **/
     function displaySamples(){
-        for(var j = 0; j < samples.length; j++){
+        for (var j = 0; j < samples.length; j++){
             var sample = samples[j];
-            $(".samples").append(" <span class=\"sample\" style=\"background-color:rgb("+sample.r+","+sample.g+","+sample.b+")\"> </span> ");
+            $(".samples").append(" <span class=\"sample\" style=\"background-color:rgb(" + sample.r + "," + sample.g + "," + sample.b + ")\"> </span> ");
         }
     }
 
     /**
-    * Clear old colours and generate new ones.
-    **/
+     * Clear old colours and generate new ones.
+     **/
     function newColours(){
         samples = [];
         generateRandColours(ammountOfColours);
@@ -212,34 +212,34 @@ $(document).ready(function () {
      */
     function drawGradient(can){
         // Manual Gradient
-        for (var i=0;i<256;i++){
-            for (var j=0;j<256;j++){
-                can.fillStyle = 'rgb('+i+','+j+','+ B +')';
-                can.fillRect(i,j,1,1);
-                etx.fillStyle = 'rgb('+i+','+j+','+ B +')';
-                etx.fillRect(i,j,1,1);
+        for (var i = 0; i < 256; i++){
+            for (var j = 0; j < 256; j++){
+                can.fillStyle = 'rgb(' + i + ',' + j + ',' + B + ')';
+                can.fillRect(i, j, 1, 1);
+                etx.fillStyle = 'rgb(' + i + ',' + j + ',' + B + ')';
+                etx.fillRect(i, j, 1, 1);
             }
         }
 
         /*var gradient = can.createLinearGradient(0,0, 255, 255);
-        gradient.addColorStop(0, "rgb(0, 0, "+B+")");
-        gradient.addColorStop(1, "rgb(255, 255, "+B+")");
-        can.save();
-        can.fillStyle = gradient;
-        etx.fillStyle = gradient;
-        can.fillRect(0, 0, 255, 255);
-        etx.fillRect(0, 0, 255, 255);
-        can.restore();
-        RG++;*/
+         gradient.addColorStop(0, "rgb(0, 0, "+B+")");
+         gradient.addColorStop(1, "rgb(255, 255, "+B+")");
+         can.save();
+         can.fillStyle = gradient;
+         etx.fillStyle = gradient;
+         can.fillRect(0, 0, 255, 255);
+         etx.fillRect(0, 0, 255, 255);
+         can.restore();
+         RG++;*/
     }
 
     /**
      * Update Values
      */
     function updateColour(){
-        if(B < 256 && dir == "up") B = B+4;
+        if (B < 256 && dir == "up") B = B + 4;
         else dir = "down";
-        if(B > 0 && dir == "down") B = B-4;
+        if (B > 0 && dir == "down") B = B - 4;
         else dir = "up";
     }
 
@@ -253,27 +253,27 @@ $(document).ready(function () {
 
         var numSamples = samples.length;
 
-        for (var i = 0; i < numPixels; i++) {
+        for (var i = 0; i < numPixels; i++){
 
-            var r = pixels[i*4]; // Red
-            var g = pixels[i*4+1]; // Green
-            var b = pixels[i*4+2]; // Blue
+            var r = pixels[i * 4]; // Red
+            var g = pixels[i * 4 + 1]; // Green
+            var b = pixels[i * 4 + 2]; // Blue
 
-            var rgb = [r,g,b];
+            var rgb = [r, g, b];
             var closest = samples[0];
             var mindist = dist(rgb, samples[0].values, 1);
 
-            for(var j = 0; j < numSamples; j++){
+            for (var j = 0; j < numSamples; j++){
                 var currdist = dist(samples[j].values, rgb, 1);
-                if(currdist < mindist) {
+                if (currdist < mindist){
                     mindist = currdist;
                     closest = samples[j];
                 }
             }
 
-            pixels[i*4] = closest.r; // Red
-            pixels[i*4+1] = closest.g; // Green
-            pixels[i*4+2] = closest.b; // Blue
+            pixels[i * 4] = closest.r; // Red
+            pixels[i * 4 + 1] = closest.g; // Green
+            pixels[i * 4 + 2] = closest.b; // Blue
         }
         can.clearRect(0, 0, 255, 255);
         can.putImageData(imageData, 0, 0);
@@ -287,36 +287,36 @@ $(document).ready(function () {
      * @param col2
      * @param type
      */
-    function dist(col1,col2, type) {
+    function dist(col1, col2, type){
         var value;
 
-        switch(type){
+        switch (type){
             case 1:
                 var delta_r = col1[0] - col2[0];
                 var delta_g = col1[1] - col2[1];
                 var delta_b = col1[2] - col2[2];
-                value = (delta_r * delta_r)* .299 + (delta_g * delta_g)* .587 + (delta_b * delta_b)* .114;
+                value = (delta_r * delta_r) * .299 + (delta_g * delta_g) * .587 + (delta_b * delta_b) * .114;
                 break;
             // Euclidean Distace with Eye sight alterations
             case 2:
-                value = Math.sqrt(((col1[0] - col2[0]) * .299)^2 + ((col1[1] - col2[1]) * .587)^2 + ((col1[2] - col2[2]) * .114)^2);
+                value = Math.sqrt(((col1[0] - col2[0]) * .299) ^ 2 + ((col1[1] - col2[1]) * .587) ^ 2 + ((col1[2] - col2[2]) * .114) ^ 2);
                 break;
             // Euclidean Distace
             case 3:
-                value = Math.sqrt(((col1[0] - col2[0]))^2 + ((col1[1] - col2[1]))^2 + ((col1[2] - col2[2]))^2);
+                value = Math.sqrt(((col1[0] - col2[0])) ^ 2 + ((col1[1] - col2[1])) ^ 2 + ((col1[2] - col2[2])) ^ 2);
                 break;
             default:
-                value = (delta_r * delta_r)* .299 + (delta_g * delta_g)* .587 + (delta_b * delta_b)* .114;
+                value = (delta_r * delta_r) * .299 + (delta_g * delta_g) * .587 + (delta_b * delta_b) * .114;
                 break;
         }
         return value;
     }
 
     /**
-    *
-    * INIT
-    *
-    **/
+     *
+     * INIT
+     *
+     **/
 
     generateRandColours(ammountOfColours);
     displaySamples();
@@ -324,15 +324,15 @@ $(document).ready(function () {
     /**
      * Draws everything together.
      */
-    function draw() {
+    function draw(){
         updateColour();
         drawGradient(ctx);
 
         /*var img = new Image();   // Create new img element
-        img.onload = function(){
-            ctx.drawImage(img,0,0,255,255);
-        };
-        img.src = 'img/imgres.png';*/
+         img.onload = function(){
+         ctx.drawImage(img,0,0,255,255);
+         };
+         img.src = 'img/imgres.png';*/
 
         drawNewColourSpace(ctx);
 
@@ -340,12 +340,12 @@ $(document).ready(function () {
         //context.drawImage(cnv.get(0), 0, 0, canvasHeight, canvasWidth);
     }
 
-    $(".genColours").on("click", function(){
+    $(".genColours").on("click", function (){
         newColours();
     });
 
     var currentValue = $('#currentValue');
-    $('#colourSlider').change(function(){
+    $('#colourSlider').change(function (){
         currentValue.html(this.value);
         ammountOfColours = this.value;
         newColours();
@@ -358,7 +358,7 @@ $(document).ready(function () {
      * @param from
      * @param to
      */
-    function randomFromTo(from, to) {
+    function randomFromTo(from, to){
         return Math.floor(Math.random() * (to - from + 1) + from);
     }
 
@@ -372,9 +372,9 @@ $(document).ready(function () {
 
     $(window).resize(draw);
 
-    function startRender() {
+    function startRender(){
         requestAnimationFrame(startRender);
-        if(!paused) draw();
+        if (!paused) draw();
     }
 
     startRender();
