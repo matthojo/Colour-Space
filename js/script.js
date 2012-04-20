@@ -117,6 +117,8 @@ $(document).ready(function () {
     exm.attr("width", exmWidth);
     exm.attr("height", exmHeight);
 
+    var dropzone = document.getElementById("dropzone");
+
     /**
      * Colour Settings
      */
@@ -129,9 +131,12 @@ $(document).ready(function () {
      */
     var paused = false;
     var ammountOfColours = 10;
+    var img;
+    var imgTmp;
     var imageData;
     var samples = [];
     var pixels = [];
+    var type = "gradient";
 
     /******
      *
@@ -312,6 +317,24 @@ $(document).ready(function () {
         return value;
     }
 
+    function handleFiles(files) {
+        var d = document.getElementById("fileList");
+        if (!files.length) {
+            d.innerHTML = "<p>No files selected!</p>";
+        } else {
+            var list = document.createElement("ul");
+            d.appendChild(list);
+            for (var i=0; i < 1; i++) {
+                img = new Image();
+                imgTmp = new Image();
+                img.src = window.URL.createObjectURL(files[i]);
+                imgTmp.src = window.URL.createObjectURL(files[i]);
+                type = "image";
+                exm.hide();
+            }
+        }
+    }
+
     /**
      *
      * INIT
@@ -326,15 +349,29 @@ $(document).ready(function () {
      */
     function draw(){
         updateColour();
-        drawGradient(ctx);
 
         /*var img = new Image();   // Create new img element
          img.onload = function(){
          ctx.drawImage(img,0,0,255,255);
          };
          img.src = 'img/imgres.png';*/
-
-        drawNewColourSpace(ctx);
+        switch(type){
+            case "gradient":
+                drawGradient(ctx);
+                drawNewColourSpace(ctx);
+                break;
+            case "image":
+                img.onload = function() {
+                    ctx.drawImage(img,0,0,255,255);
+                    window.URL.revokeObjectURL(img.src);
+                    drawNewColourSpace(ctx);
+                };
+                break;
+            default:
+                drawGradient(ctx);
+                drawNewColourSpace(ctx);
+                break;
+        }
 
         //Show in big
         //context.drawImage(cnv.get(0), 0, 0, canvasHeight, canvasWidth);
@@ -352,6 +389,32 @@ $(document).ready(function () {
     });
     $('#colourSlider').change();
 
+    function dragenter(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    function dragover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+
+    function drop(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var dt = e.dataTransfer;
+        var files = dt.files;
+
+        handleFiles(files);
+    }
+
+    function doClick() {
+        var el = document.getElementById("fileElem");
+        if (el) {
+            el.click();
+        }
+    }
 
     /**
      * Generate a random number between 2 numbers.
@@ -369,8 +432,11 @@ $(document).ready(function () {
     function bitwiseRound(number){
         return ~~(0.5 + number);
     }
-
+    $(".doClick").on("click", doClick);
     $(window).resize(draw);
+    dropzone.addEventListener("dragenter", dragenter, false);
+    dropzone.addEventListener("dragover", dragover, false);
+    dropzone.addEventListener("drop", drop, false);
 
     function startRender(){
         requestAnimationFrame(startRender);

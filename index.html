@@ -47,10 +47,17 @@
         <input id="colourSlider" type="range" min="1" max="50" value="10"/>
         <p class="note">Number Of Colours: <span id="currentValue">0</span></p>
         <a href="#" class="genColours btn">Generate New Colours</a>
-
-
     </div>
+    <p>Select / upload an image to apple colour limitations to.</p>
 
+    <input type="file" id="fileElem" multiple accept="image/*" style="display:none" onchange="handleFiles(this.files)">
+    <a class="doClick">Select some files</a>
+    <div>
+        <div id="dropzone" style="margin:30px; width:500px; height:300px; border:1px dotted grey;">Drag & drop your file here...</div>
+    </div>
+    <div id="fileList">
+        <p>No files selected!</p>
+    </div>
   <!-- JavaScript at the bottom for fast page loading -->
 
   <!-- Grab Google CDN's jQuery, with a protocol relative URL; fall back to local if offline -->
